@@ -54,11 +54,18 @@ import com.qualcomm.robotcore.util.Range;
 
 public class sophiacode_1 extends OpMode {
     // Declare OpMode members.
+
+    public enum Drivetrain {
+        SOPHIACODE1,
+
+    }
+    private Drivetrain drive;
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor F_leftDrive = null;
     private DcMotor F_rightDrive = null;
     private DcMotor B_rightDrive = null;
     private DcMotor B_leftDrive = null;
+    public static final double Y_INCH_TICKS = 45;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -138,32 +145,10 @@ public class sophiacode_1 extends OpMode {
         B_rightDrive.setPower(0);
         B_leftDrive.setPower(0);
 
-        if (gamepad1.dpad_up) {
-            F_rightDrive.setPower(1);
-            F_leftDrive.setPower(1);
-            B_rightDrive.setPower(1);
-            B_leftDrive.setPower(1);
-        }
-            if (gamepad1.dpad_down) {
-                F_rightDrive.setPower(-1);
-                F_leftDrive.setPower(-1);
-                B_rightDrive.setPower(-1);
-                B_leftDrive.setPower(-1);
-            }
-                if (gamepad1.dpad_left) {
-                    F_rightDrive.setPower(-1);
-                    F_leftDrive.setPower(1);
-                    B_rightDrive.setPower(-1);
-                    B_leftDrive.setPower(1);
-                }
-                    if (gamepad1.dpad_right) {
-                        F_rightDrive.setPower(1);
-                        F_leftDrive.setPower(-1);
-                        B_rightDrive.setPower(1);
-                        B_leftDrive.setPower(-1);
 
 
-                    }
+
+
 
 
 
@@ -172,6 +157,36 @@ public class sophiacode_1 extends OpMode {
 
     }
 
+    public void move(double x, double y, double turn) {
+        double denominator;
+        double F_LPower;
+        double F_RPower;
+        double B_RPower;
+        double B_LPower;
+
+        switch (drive) {
+
+            case SOPHIACODE1:
+             denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(turn), 1);
+
+             F_LPower = (y + x + turn) / denominator;
+             F_RPower = (y - x - turn) / denominator;
+             B_RPower = (y - x + turn) / denominator;
+             B_LPower = (y + x - turn) / denominator;
+
+             F_leftDrive.setPower(F_LPower);
+             F_rightDrive.setPower (F_RPower);
+             B_rightDrive.setPower(B_RPower);
+             B_leftDrive.setPower(B_LPower);
+        }
+    }
+    public void moveForwardInches(double inches, double speed) {
+
+        int tickTarget = (int) Math.round(inches * Y_INCH_TICKS);
+        move(0, speed, 0);
+
+
+    }
     /*
      * Code to run ONCE after the driver hits STOP
      */
