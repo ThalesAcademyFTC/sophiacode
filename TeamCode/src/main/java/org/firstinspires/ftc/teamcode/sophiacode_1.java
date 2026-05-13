@@ -188,7 +188,7 @@ public class sophiacode_1 extends OpMode {
 
     }
     /*
-     * CODE to run ONCE  after the driver hits STOP
+     * The CODE to run ONCE  after the driver hits STOP
      */
     @Override
     public void stop() {
