@@ -31,6 +31,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -48,7 +49,7 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@Autonomous(name="sophiacode_move")
+
 
 public class sophiacode extends OpMode {
     // Declare OpMode members.
@@ -57,6 +58,7 @@ public class sophiacode extends OpMode {
         SOPHIACODE1,
 
     }
+    private DcMotorEx allDriveMotor[] = {} ;
     private Drivetrain drive;
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor F_leftDrive = null;
@@ -143,16 +145,6 @@ public class sophiacode extends OpMode {
         B_rightDrive.setPower(0);
         B_leftDrive.setPower(0);
 
-
-
-
-
-
-
-
-
-
-
     }
 
     public void move(double x, double y, double turn) {
@@ -181,9 +173,17 @@ public class sophiacode extends OpMode {
     public void moveForwardInches(double inches, double speed) {
 
         int tickTarget = (int) Math.round(inches * Y_INCH_TICKS);
+
+        for (DcMotor x : allDriveMotor){
+
+            x.setTargetPosition(tickTarget);
+            x.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
         move(0, speed, 0);
 
-
+    }
+    public void moveBackwardInches(double inches, double speed){
+        moveForwardInches(-inches, -speed);
     }
     /*
      * The CODE to run ONCE  after the driver hits STOP
